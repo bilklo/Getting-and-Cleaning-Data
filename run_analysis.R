@@ -1,6 +1,7 @@
 run_analysis <- function()
 {
   library(dplyr)
+  library(plyr)  
   
   #load labels
   label_activities <- read.table("./activity_labels.txt")
@@ -135,10 +136,60 @@ run_analysis <- function()
   colnames(myData)[70]<-"gravityMean_X"  
   colnames(myData)[71]<-"gravityMean_Y"
   colnames(myData)[72]<-"gravityMean_Z"
-  colnames(myData)[72]<-"subject"
+  colnames(myData)[73]<-"subject"
   
   #export
   export<-myData;
   export[[1]]<-NULL
-  write.table(export,"./export.txt", row.names=FALSE)
+  
+  #create tidy data set
+  tidy <- aggregate(tBodyAcc.mean.X ~ activity + subject , data = export, mean)
+  tmp <- aggregate(tBodyAcc.mean.Y ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])
+  tmp <- aggregate(tBodyAcc.mean.Z ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])  
+  tmp <- aggregate(tBodyAcc.std.X ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])   
+  tmp <- aggregate(tBodyAcc.std.Y ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])
+  tmp <- aggregate(tBodyAcc.std.Z ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3]) 
+  tmp <- aggregate(tGravityAcc.mean.X ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])  
+  tmp <- aggregate(tGravityAcc.mean.Y ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])    
+  tmp <- aggregate(tGravityAcc.mean.Z ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])   
+  tmp <- aggregate(tGravityAcc.std.X ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])   
+  tmp <- aggregate(tGravityAcc.std.Y ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])   
+  tmp <- aggregate(tGravityAcc.std.Z ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3]) 
+  tmp <- aggregate(tBodyAccJerk.mean.X ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])   
+  tmp <- aggregate(tBodyAccJerk.mean.Y ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])   
+  tmp <- aggregate(tBodyAccJerk.mean.Z ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3]) 
+  tmp <- aggregate(tBodyAccJerk.std.X ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3]) 
+  tmp <- aggregate(tBodyAccJerk.std.Y ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])
+  tmp <- aggregate(tBodyAccJerk.std.Z ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])   
+  tmp <- aggregate(tBodyGyro.mean.X ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3]) 
+  tmp <- aggregate(tBodyGyro.mean.Y ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])  
+  tmp <- aggregate(tBodyGyro.mean.Z ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])   
+  tmp <- aggregate(tBodyGyro.std.X ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])  
+  tmp <- aggregate(tBodyGyro.std.Y ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])
+  tmp <- aggregate(tBodyGyro.std.Z ~ activity + subject , data = export, mean)
+  tidy <- cbind(tidy,tmp[3])    
+
+  write.table(tidy,"./export.txt", row.names=FALSE)
 }
